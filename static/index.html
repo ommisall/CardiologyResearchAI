@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CardioResearch AI — Agentic AI Research Platform for Cardiology</title>
+  <meta name="description" content="Evidence-grounded multi-agent AI research assistant for discovering, comparing, and synthesizing cardiology literature using RAG.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Chart.js for Visualizations -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Bespoke Stylesheet -->
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Medical Safety Disclaimer Banner -->
+    <div class="medical-disclaimer-banner" id="disclaimer-banner">
+      <div class="disclaimer-content">
+        <span class="disclaimer-badge">Medical Safety Notice</span>
+        <span>CardioResearch AI is intended for research and educational purposes only. It does not provide medical diagnosis or treatment recommendations. Always consult qualified healthcare professionals for clinical decisions.</span>
+      </div>
+      <button style="background:transparent; border:none; color:#fecdd3; cursor:pointer; font-size:16px;" onclick="document.getElementById('disclaimer-banner').style.display='none'">✕</button>
+    </div>
+
+    <!-- App Header -->
+    <header class="app-header">
+      <div class="brand" onclick="switchTab('dashboard')">
+        <div class="brand-icon-wrapper">
+          <div class="brand-pulse"></div>
+          <!-- Cardiac Wave Icon -->
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+            <path d="M3.22 12H9.5l1.5-3 2 6 1.5-3h6.28"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>CardioResearch AI</h1>
+          <div class="subtext">Multi-Agent Cardiology Research Platform</div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="nav-tabs">
+        <button class="nav-tab active" data-tab="dashboard">
+          <span>📊 Dashboard</span>
+        </button>
+        <button class="nav-tab" data-tab="research">
+          <span>🔬 Research Explorer</span>
+        </button>
+        <button class="nav-tab" data-tab="compare">
+          <span>⚖️ Study Comparison</span>
+          <span id="compare-count-badge" style="background:var(--accent-ruby); color:#fff; font-size:10px; padding:2px 6px; border-radius:10px; margin-left:4px;">0</span>
+        </button>
+        <button class="nav-tab" data-tab="review">
+          <span>📑 Literature Review</span>
+        </button>
+        <button class="nav-tab" data-tab="gaps">
+          <span>🧩 Research Gaps</span>
+        </button>
+        <button class="nav-tab" data-tab="chat">
+          <span>💬 AI Chat (RAG)</span>
+        </button>
+        <button class="nav-tab" data-tab="pdf_lab">
+          <span>📂 PDF Lab</span>
+        </button>
+        <button class="nav-tab" data-tab="settings">
+          <span>⚙️ Settings</span>
+        </button>
+      </nav>
+
+      <!-- Header Workspace Controls -->
+      <div class="header-actions">
+        <div class="project-select-wrapper">
+          <select id="active-project-select">
+            <option value="default-project-1">📁 Deep Learning in ECG</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Viewport -->
+    <main class="main-viewport">
+
+      <!-- VIEW 1: DASHBOARD -->
+      <section class="view-panel active" id="view-dashboard">
+        <div class="section-header">
+          <h2>Cardiology AI Research Intelligence</h2>
+          <p>Autonomous discovery, parameter extraction, and multi-study synthesis across PubMed and Europe PMC.</p>
+        </div>
+
+        <!-- KPI Metrics Grid -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:18px; margin-bottom:28px;">
+          <div class="glass-card">
+            <span style="font-size:12px; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Literature Indexed</span>
+            <div id="kpi-total-papers" style="font-size:32px; font-weight:800; color:#fff; margin-top:6px; font-family:var(--font-heading);">12</div>
+            <span style="font-size:11.5px; color:var(--accent-cyan);">PubMed & Europe PMC</span>
+          </div>
+
+          <div class="glass-card">
+            <span style="font-size:12px; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Autonomous Queries</span>
+            <div id="kpi-queries" style="font-size:32px; font-weight:800; color:#fff; margin-top:6px; font-family:var(--font-heading);">18</div>
+            <span style="font-size:11.5px; color:var(--accent-ruby);">Multi-Agent Workflows</span>
+          </div>
+
+          <div class="glass-card">
+            <span style="font-size:12px; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Evidence Confidence</span>
+            <div id="kpi-confidence" style="font-size:32px; font-weight:800; color:var(--accent-emerald); margin-top:6px; font-family:var(--font-heading);">96.4%</div>
+            <span style="font-size:11.5px; color:var(--text-muted);">Source-Grounded Passages</span>
+          </div>
+
+          <div class="glass-card">
+            <span style="font-size:12px; color:var(--text-muted); text-transform:uppercase; font-weight:600;">RAG Hallucination Guard</span>
+            <div style="font-size:32px; font-weight:800; color:#38bdf8; margin-top:6px; font-family:var(--font-heading);">Active</div>
+            <span style="font-size:11.5px; color:var(--accent-cyan);">Strict Citation Anchor</span>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div style="display:grid; grid-template-columns:1fr 1.2fr; gap:24px; margin-bottom:30px;">
+          <div class="glass-card">
+            <h3 style="font-size:16px; color:#fff; margin-bottom:16px;">AI Architecture Distribution in Cardiology</h3>
+            <canvas id="chart-models" height="210"></canvas>
+          </div>
+          <div class="glass-card">
+            <h3 style="font-size:16px; color:#fff; margin-bottom:16px;">Cardiovascular AI Publication Growth</h3>
+            <canvas id="chart-trends" height="210"></canvas>
+          </div>
+        </div>
+
+        <!-- Quick Start Suggestions -->
+        <div class="glass-card">
+          <h3 style="font-size:16px; color:#fff; margin-bottom:14px;">Explore Benchmark Research Questions</h3>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:14px;">
+            <div class="glass-card" style="padding:16px; cursor:pointer; background:rgba(255,255,255,0.02);" onclick="executeSearch('Recent deep learning models for ECG arrhythmia detection')">
+              <h4 style="font-size:14.5px; color:var(--accent-cyan); margin-bottom:6px;">ECG Arrhythmia Detection →</h4>
+              <p style="font-size:12.5px; color:var(--text-muted);">Compare 1D-CNNs, ResNets, and Attention Transformers on PTB-XL and MIT-BIH.</p>
+            </div>
+            <div class="glass-card" style="padding:16px; cursor:pointer; background:rgba(255,255,255,0.02);" onclick="executeSearch('Asymptomatic left ventricular dysfunction screening with ECG AI')">
+              <h4 style="font-size:14.5px; color:var(--accent-ruby); margin-bottom:6px;">Left Ventricular Dysfunction →</h4>
+              <p style="font-size:12.5px; color:var(--text-muted);">Evaluate CNN diagnostic accuracy for ejection fraction impairment screening.</p>
+            </div>
+            <div class="glass-card" style="padding:16px; cursor:pointer; background:rgba(255,255,255,0.02);" onclick="executeSearch('Self-attention transformers for wearable smartwatch ECG')">
+              <h4 style="font-size:14.5px; color:#a78bfa; margin-bottom:6px;">Wearable Smartwatch Arrhythmia →</h4>
+              <p style="font-size:12.5px; color:var(--text-muted);">Analyze noise robustness and latency constraints on single-lead wearable recordings.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 2: RESEARCH EXPLORER -->
+      <section class="view-panel" id="view-research">
+        <div class="section-header">
+          <h2>Autonomous Research Explorer</h2>
+          <p>Enter a natural-language research question to activate the multi-agent search, ranking, and parameter extraction workflow.</p>
+        </div>
+
+        <!-- Search Hero -->
+        <div class="search-hero">
+          <div class="search-input-group">
+            <input type="text" id="research-query-input" placeholder="e.g. Compare CNN, LSTM, and Transformer models for ECG arrhythmia classification..." value="Recent deep learning models for ECG arrhythmia detection">
+            <button class="btn btn-primary" id="btn-run-search">
+              <span>⚡ Run Multi-Agent Search</span>
+            </button>
+          </div>
+
+          <div class="search-filters-bar">
+            <div class="filter-tags">
+              <span style="font-size:12px; color:var(--text-subtle);">Suggestions:</span>
+              <button class="filter-tag-btn" data-query="Recent deep learning models for ECG arrhythmia detection">ECG Arrhythmia</button>
+              <button class="filter-tag-btn" data-query="PTB-XL benchmark convolutional neural networks">PTB-XL Benchmarks</button>
+              <button class="filter-tag-btn" data-query="Paroxysmal atrial fibrillation detection normal sinus rhythm">Occult AFib</button>
+              <button class="filter-tag-btn" data-query="Wearable smartwatch transformer arrhythmia">Wearable Sensors</button>
+            </div>
+            <div style="font-size:12px; color:var(--text-muted);">
+              Federating: <strong style="color:var(--accent-cyan);">PubMed</strong> & <strong style="color:var(--accent-cyan);">Europe PMC</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Multi-Agent Execution Stepper -->
+        <div class="agent-stepper" id="agent-stepper">
+          <div class="stepper-header">
+            <span>Autonomous Multi-Agent Telemetry Stream</span>
+            <span style="font-size:11px; color:var(--accent-emerald);">● Pipeline Active</span>
+          </div>
+          <div class="stepper-track">
+            <div class="stepper-item" id="step-orchestrator">
+              <div class="stepper-indicator">1</div>
+              <div class="stepper-info">
+                <div class="name">Orchestrator</div>
+                <div class="status-msg">Coordinates Graph</div>
+              </div>
+            </div>
+            <div class="stepper-item" id="step-query-agent">
+              <div class="stepper-indicator">2</div>
+              <div class="stepper-info">
+                <div class="name">Query Analyzer</div>
+                <div class="status-msg">Expands MeSH Terms</div>
+              </div>
+            </div>
+            <div class="stepper-item" id="step-search-agent">
+              <div class="stepper-indicator">3</div>
+              <div class="stepper-info">
+                <div class="name">Search Agent</div>
+                <div class="status-msg">PubMed & Europe PMC</div>
+              </div>
+            </div>
+            <div class="stepper-item" id="step-ranking-agent">
+              <div class="stepper-indicator">4</div>
+              <div class="stepper-info">
+                <div class="name">Ranking Agent</div>
+                <div class="status-msg">Semantic Scoring</div>
+              </div>
+            </div>
+            <div class="stepper-item" id="step-analysis-agent">
+              <div class="stepper-indicator">5</div>
+              <div class="stepper-info">
+                <div class="name">Analysis Agent</div>
+                <div class="status-msg">Extracts Parameters</div>
+              </div>
+            </div>
+            <div class="stepper-item" id="step-evidence-agent">
+              <div class="stepper-indicator">6</div>
+              <div class="stepper-info">
+                <div class="name">Evidence Agent</div>
+                <div class="status-msg">Grounds Claims</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Synthesis Box Container -->
+        <div id="synthesis-summary-card" style="margin-bottom:28px; display:none;"></div>
+
+        <!-- Retrieved Paper Cards Grid -->
+        <div class="paper-cards-grid" id="paper-cards-container"></div>
+      </section>
+
+      <!-- VIEW 3: STUDY COMPARISON -->
+      <section class="view-panel" id="view-compare">
+        <div class="section-header">
+          <h2>Study Comparison Matrix</h2>
+          <p>Side-by-side contrast of study objectives, datasets, sample sizes, deep learning architectures, performance metrics, and limitations.</p>
+        </div>
+        <div id="comparison-content"></div>
+      </section>
+
+      <!-- VIEW 4: LITERATURE REVIEW STUDIO -->
+      <section class="view-panel" id="view-review">
+        <div class="section-header">
+          <h2>Autonomous Literature Review Studio</h2>
+          <p>Publication-ready 8-section structured academic literature review synthesized from retrieved papers with verified citations.</p>
+        </div>
+        <div id="review-viewer">
+          <div class="glass-card" style="text-align:center; padding:50px;">
+            <h3 style="color:#fff; margin-bottom:8px;">No review generated yet</h3>
+            <p style="color:var(--text-muted); margin-bottom:20px;">Run a search in Research Explorer or click the button below to synthesize an 8-section academic review from current literature.</p>
+            <button class="btn btn-primary" onclick="generateLiteratureReviewFromCurrent()">⚡ Synthesize Literature Review Now</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 5: RESEARCH GAPS -->
+      <section class="view-panel" id="view-gaps">
+        <div class="section-header">
+          <h2>Synthesized Research Gaps & Frontiers</h2>
+          <p>Cross-study limitation detection synthesizing recurring bottlenecks across multi-center validation, dataset diversity, and interpretability.</p>
+        </div>
+        <div id="gaps-container"></div>
+      </section>
+
+      <!-- VIEW 6: AI RESEARCH CHAT (RAG) -->
+      <section class="view-panel" id="view-chat">
+        <div class="section-header" style="display:flex; justify-content:space-between; align-items:flex-end;">
+          <div>
+            <h2>Project-Grounded Research Assistant (RAG)</h2>
+            <p>Ask in-depth questions regarding retrieved cardiology papers. All answers are grounded in verifiable literature chunks with explicit confidence ratings.</p>
+          </div>
+          <button class="btn btn-sm btn-secondary" onclick="clearChatMessages()">🗑️ Clear Chat</button>
+        </div>
+
+        <div class="chat-container">
+          <div class="chat-messages" id="chat-messages-container">
+            <div class="chat-bubble assistant">
+              <div style="font-size:11px; color:var(--accent-cyan); font-weight:700; margin-bottom:6px;">● CardioResearch AI Co-Pilot Ready</div>
+              👋 <strong>Hello! I am your CardioResearch AI research co-pilot.</strong><br>
+              I am grounded in verified cardiology literature (PubMed & Europe PMC). You can ask me questions about deep learning models, datasets (like PTB-XL), reported AUC scores, or clinical limitations.
+            </div>
+          </div>
+
+          <!-- Quick Suggested Prompts -->
+          <div style="padding:10px 20px; background:rgba(10, 15, 26, 0.9); border-top:1px solid var(--border-subtle); display:flex; gap:8px; overflow-x:auto; white-space:nowrap;">
+            <span style="font-size:11.5px; color:var(--text-subtle); display:inline-flex; align-items:center;">Try asking:</span>
+            <button class="filter-tag-btn" onclick="sendSuggestedChat('What are the benchmark results and sample size of the PTB-XL dataset?')">📊 PTB-XL Benchmark & Sample Size</button>
+            <button class="filter-tag-btn" onclick="sendSuggestedChat('Compare CNN, 1D-ResNet, and Attention Transformers for ECG classification')">⚖️ CNN vs ResNet vs Transformer</button>
+            <button class="filter-tag-btn" onclick="sendSuggestedChat('How accurate is the Mayo Clinic CNN for asymptomatic left ventricular dysfunction?')">🩺 Mayo Clinic Ejection Fraction CNN</button>
+            <button class="filter-tag-btn" onclick="sendSuggestedChat('What are the primary reported limitations across current cardiology AI studies?')">⚠️ Common Study Limitations</button>
+          </div>
+
+          <div class="chat-input-bar">
+            <input type="text" id="chat-input-field" placeholder="Ask a question about cardiology AI, models, datasets, or metrics...">
+            <button class="btn btn-primary" id="btn-send-chat">Send Question</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 7: PDF LAB -->
+      <section class="view-panel" id="view-pdf_lab">
+        <div class="section-header">
+          <h2>PDF Document Ingestion & RAG Lab</h2>
+          <p>Upload your own cardiology research papers in PDF format. The system automatically extracts sections, computes semantic vector chunks, and indexes them into the RAG vector store.</p>
+        </div>
+
+        <div class="glass-card" style="margin-bottom:24px;">
+          <div id="pdf-dropzone" style="border:2px dashed var(--border-subtle); border-radius:var(--radius-lg); padding:40px; text-align:center; cursor:pointer; transition:var(--transition-fast);">
+            <div style="font-size:40px; margin-bottom:10px;">📄</div>
+            <h3 style="color:#fff; font-size:18px;">Drag & Drop Research Paper PDF</h3>
+            <p style="color:var(--text-muted); font-size:13px; margin-top:6px;">or click here to browse files from your computer</p>
+            <input type="file" id="pdf-file-input" accept=".pdf" style="display:none;">
+          </div>
+          <div id="pdf-upload-status" style="margin-top:20px; display:none;"></div>
+        </div>
+      </section>
+
+      <!-- VIEW 8: SETTINGS -->
+      <section class="view-panel" id="view-settings">
+        <div class="section-header">
+          <h2>System Configuration & LLM Gateway</h2>
+          <p>Select your active LLM provider, enter API credentials, or utilize the built-in offline Cardiology Expert Heuristic Synthesizer.</p>
+        </div>
+
+        <div class="glass-card" style="max-width:680px;">
+          <div style="margin-bottom:20px;">
+            <label style="display:block; font-size:13px; font-weight:600; color:#fff; margin-bottom:6px;">Primary LLM Synthesis Provider</label>
+            <select id="setting-llm-provider" style="width:100%; background:var(--bg-tertiary); color:#fff; border:1px solid var(--border-subtle); padding:10px 14px; border-radius:var(--radius-md);">
+              <option value="heuristic">Built-in Cardiology Expert Heuristic Engine (Zero-Key Offline Fallback)</option>
+              <option value="gemini">Google Gemini 1.5 / 2.0 Flash</option>
+              <option value="openai">OpenAI GPT-4o-mini</option>
+              <option value="groq">Groq (Llama-3.3-70B Fast Inference)</option>
+              <option value="ollama">Local Ollama (http://localhost:11434)</option>
+            </select>
+            <small style="color:var(--text-muted); display:block; margin-top:4px;">The built-in engine provides instant, robust research outputs for live project demos without external API dependencies.</small>
+          </div>
+
+          <div style="margin-bottom:18px;">
+            <label style="display:block; font-size:13px; font-weight:600; color:#fff; margin-bottom:6px;">Google Gemini API Key (Optional)</label>
+            <input type="password" id="setting-gemini-key" placeholder="AIzaSy..." style="width:100%; background:var(--bg-tertiary); color:#fff; border:1px solid var(--border-subtle); padding:10px 14px; border-radius:var(--radius-md);">
+          </div>
+
+          <div style="margin-bottom:18px;">
+            <label style="display:block; font-size:13px; font-weight:600; color:#fff; margin-bottom:6px;">OpenAI API Key (Optional)</label>
+            <input type="password" id="setting-openai-key" placeholder="sk-..." style="width:100%; background:var(--bg-tertiary); color:#fff; border:1px solid var(--border-subtle); padding:10px 14px; border-radius:var(--radius-md);">
+          </div>
+
+          <div style="margin-bottom:24px;">
+            <label style="display:block; font-size:13px; font-weight:600; color:#fff; margin-bottom:6px;">Groq API Key (Optional)</label>
+            <input type="password" id="setting-groq-key" placeholder="gsk_..." style="width:100%; background:var(--bg-tertiary); color:#fff; border:1px solid var(--border-subtle); padding:10px 14px; border-radius:var(--radius-md);">
+          </div>
+
+          <button class="btn btn-primary" id="btn-save-settings">Save Configuration</button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Paper Detail Modal -->
+    <div class="modal-overlay" id="paper-detail-modal">
+      <div class="modal-content">
+        <button class="modal-close-btn" onclick="closeModal('paper-detail-modal')">✕</button>
+        <div id="paper-modal-body"></div>
+      </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-# CardioResearch AI — Agentic AI Research Platform for Cardiology
+# CardioResearch AI : Agentic AI Research Platform for Cardiology
 
 **BTech Final-Year Project / AI Research Platform (Version 1.0)**
 
@@ -95,6 +95,5 @@ python -m pytest tests/test_pipeline.py -v
 
 ---
 
-## ⚖️ Medical Safety Disclaimer
 
-> **CardioResearch AI is intended for research and educational purposes only. It does not provide medical diagnosis or treatment recommendations. Always consult qualified healthcare professionals for clinical decisions.**
+> **CardioResearch AI is intended for research and educational purposes only.**
